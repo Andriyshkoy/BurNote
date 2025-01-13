@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Success{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    {% include('layout/flash.html') %}
+    <h1 class="mb-4">Note URL:</h1>
+    <div class="card p-3 shadow-sm">
+      <span id="noteLink" class="fs-5 fw-bold text-body" style="text-decoration: underline;">
+        {{ link }}
+      </span>
+    </div>
+    <div class="mt-4">
+      <a href="{{ url_for('webapp.create') }}" class="btn btn-primary btn-lg">
+        <i class="bi bi-plus-circle"></i> Create another note
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Добавляем обработчик нажатия на ссылку
+    document.getElementById('noteLink').addEventListener('click', function () {
+        const linkText = this.textContent;
+        navigator.clipboard.writeText(linkText).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    });
+  </script>
+{% endblock %}

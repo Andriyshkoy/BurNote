@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Warning{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    {% include('layout/flash.html') %}
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="col-12 text-center">
+        {{ form.submit(class_="btn btn-primary") }}
+      </div>
+    </form>
+    <div class="mt-4">
+      <a href="{{ url_for('webapp.create') }}" class="btn btn-primary btn-lg">
+        <i class="bi bi-plus-circle"></i> Create another note
+      </a>
+    </div>
+  </div>
+{% endblock %}

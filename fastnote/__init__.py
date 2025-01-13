@@ -4,8 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 from settings import Config
 
-db = SQLAlchemy() 
-migrate = Migrate() 
+db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app(config_class=Config):
@@ -15,5 +15,8 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    from fastnote.webapp import bp as webapp_bp
+    app.register_blueprint(webapp_bp)
 
     return app

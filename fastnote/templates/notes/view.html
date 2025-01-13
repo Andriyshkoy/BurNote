@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Note: {{ note.title if note.title else 'Untitled' }}{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="card p-3 shadow-sm">
+      <div class="card-body">
+        <h1 class="card-title">{{ note.title if note.title else 'Untitled' }}</h1>
+        <p class="card-text">{{ note.text }}</p>
+        <p class="card-text">
+          <small class="text-muted">
+            Created: {{ note.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+          </small>
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

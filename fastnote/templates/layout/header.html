@@ -1,0 +1,9 @@
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('webapp.create') }}">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="d-inline-block" width="45" height="45">
+      FastNote
+    </a>
+    <a class="btn btn-outline-light" href="{{ url_for('webapp.about') }}">About</a>
+  </div>
+</nav>
