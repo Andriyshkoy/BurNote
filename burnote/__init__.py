@@ -22,4 +22,7 @@ def create_app(config_class=Config):
     from burnote.webapp import bp as webapp_bp
     app.register_blueprint(webapp_bp)
 
+    from burnote.api import bp as api_bp
+    app.register_blueprint(api_bp)
+
     return app
