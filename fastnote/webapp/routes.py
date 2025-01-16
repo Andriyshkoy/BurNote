@@ -29,8 +29,10 @@ def note_view(key):
 
     if not note.is_available():
         flash('This note has expired and has been deleted.', 'danger')
-        return render_template('notes/expired.html')
+        return render_template('notes/expired.html',
+                               exp_time=note.expiration_date)
 
+    # Handle POST request
     form = NoteAccessForm()
     if form.validate_on_submit():
         try:
@@ -41,11 +43,12 @@ def note_view(key):
 
         if note.burn_after_reading:
             flash('This note was only available once. It has been deleted. '
-                  'Make sure to remember the content.', 'warning')
-            note.expire()
+                  'Make sure to remember the content.', 'danger')
+            note = note.expire()
 
         return render_template('notes/view.html', note=note)
 
+    # Handle GET request
     try:
         note.decrypt(key, '')
     except UnicodeDecodeError:
@@ -54,6 +57,6 @@ def note_view(key):
     if note.burn_after_reading:
         flash('This note was only available once. It has been deleted. '
               'Make sure to remember the content.', 'warning')
-        note.expire()
+        note = note.expire()
 
     return render_template('notes/view.html', note=note)
