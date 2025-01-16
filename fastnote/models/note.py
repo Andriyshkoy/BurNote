@@ -105,7 +105,11 @@ class Note(db.Model):
     def expire(self):
         self.is_expired = True
         self.expiration_date = datetime.now(timezone.utc)
+        copy = Note(title=self.title, text=self.text, timestamp=self.timestamp)
+        self.text = ''
+        self.title = ''
         db.session.commit()
+        return copy
 
     @staticmethod
     def get_by_hash(hash, silent=False):
