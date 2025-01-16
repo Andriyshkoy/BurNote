@@ -19,7 +19,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     moment.init_app(app)
 
-    from fastnote.webapp import bp as webapp_bp
+    from burnote.webapp import bp as webapp_bp
     app.register_blueprint(webapp_bp)
 
     return app

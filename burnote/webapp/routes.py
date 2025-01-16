@@ -2,7 +2,7 @@ from flask import flash, render_template
 
 from . import bp
 from .forms import NoteAccessForm, NoteForm
-from fastnote.models.note import Note
+from burnote.models.note import Note
 
 
 @bp.route('/', methods=['GET', 'POST'])
