@@ -15,7 +15,7 @@
           <div class="text-end">
             <p class="card-text mb-0">
               <small class="text-muted">
-                Created: {{ note.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                Created: {{ moment(note.timestamp).format('LLL') }}
               </small>
             </p>
           </div>

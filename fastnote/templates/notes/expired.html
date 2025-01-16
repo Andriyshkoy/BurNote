@@ -10,7 +10,7 @@
       <div class="card shadow-sm border-0 text-center">
         <div class="card-body">
           <h1 class="text-danger">Note Expired</h1>
-          <p class="text-muted">The note you are trying to access has expired or no longer exists.</p>
+          <p class="text-muted">The note you are trying to access has expired {{ moment(exp_time).fromNow() }} and no longer exists.</p>
           <div class="mt-4">
             <a href="{{ url_for('webapp.create') }}" class="btn btn-primary btn-lg">
               <i class="bi bi-plus-circle"></i> Create Another Note

@@ -29,7 +29,8 @@ def note_view(key):
 
     if not note.is_available():
         flash('This note has expired and has been deleted.', 'danger')
-        return render_template('notes/expired.html')
+        return render_template('notes/expired.html',
+                               exp_time=note.expiration_date)
 
     form = NoteAccessForm()
     if form.validate_on_submit():
