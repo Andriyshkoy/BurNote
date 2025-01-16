@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, TextAreaField, SelectField,
-                     BooleanField)
+                     BooleanField, PasswordField)
 from wtforms.validators import DataRequired, Optional, Length
 
 choises = (
@@ -28,13 +28,15 @@ def parse_timedelta(timedelta_str):
 
 
 class NoteForm(FlaskForm):
-    title = StringField('Title', validators=[Optional(), Length(max=100)])
+    title = StringField('Title', validators=[Optional(), Length(max=32)])
     text = TextAreaField('Body', validators=[DataRequired()])
     expiration = SelectField('Expiration', choices=choises,
                              coerce=parse_timedelta)
     burn_after_reading = BooleanField('Burn after reading')
+    password = PasswordField('Password', validators=[Optional()])
     submit = SubmitField('Submit')
 
 
-class BurnForm(FlaskForm):
-    submit = SubmitField('Read and burn.')
+class NoteAccessForm(FlaskForm):
+    password = PasswordField('Password', validators=[Optional()])
+    submit = SubmitField('Submit')
