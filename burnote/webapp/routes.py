@@ -2,6 +2,7 @@ from flask import flash, render_template
 
 from . import bp
 from .forms import NoteAccessForm, NoteForm
+from burnote.models.errors import DecryptionError
 from burnote.models.note import Note
 
 
@@ -37,7 +38,7 @@ def note_view(key):
     if form.validate_on_submit():
         try:
             note.decrypt(key, form.password.data)
-        except UnicodeDecodeError:
+        except DecryptionError:
             flash('Invalid password', 'danger')
             return render_template('notes/password_protected.html', form=form)
 
@@ -51,7 +52,7 @@ def note_view(key):
     # Handle GET request
     try:
         note.decrypt(key, '')
-    except UnicodeDecodeError:
+    except DecryptionError:
         return render_template('notes/password_protected.html', form=form)
 
     if note.burn_after_reading:

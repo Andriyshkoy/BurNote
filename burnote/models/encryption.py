@@ -1,26 +1,34 @@
 import hashlib
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import os
+
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+from .errors import DecryptionError
 
 
 class Encryptor:
 
     @staticmethod
-    def generate_key_iv(password: str, note_id: str):
-        key = hashlib.sha256((password + note_id).encode()).digest()[:32]
-        iv = hashlib.sha256((note_id + password).encode()).digest()[:16]
-        return key, iv
+    def generate_key(password: str, note_id: str) -> bytes:
+        return hashlib.sha256((password + note_id).encode()).digest()
 
     @staticmethod
     def encrypt_data(data: str, password: str, note_id: str) -> bytes:
-        key, iv = Encryptor.generate_key_iv(password, note_id)
-        cipher = Cipher(algorithms.AES(key), modes.CFB(iv))
-        encryptor = cipher.encryptor()
-        return encryptor.update(data.encode()) + encryptor.finalize()
+        key = Encryptor.generate_key(password, note_id)
+        # AES-GCM требует уникального nonce для каждой операции шифрования
+        nonce = os.urandom(12)  # 96 бит (12 байт) для AES-GCM
+        aesgcm = AESGCM(key)
+        ciphertext = aesgcm.encrypt(nonce, data.encode(), None)
+        return nonce + ciphertext
 
     @staticmethod
     def decrypt_data(ciphertext: bytes, password: str, note_id: str) -> str:
-        key, iv = Encryptor.generate_key_iv(password, note_id)
-        cipher = Cipher(algorithms.AES(key), modes.CFB(iv))
-        decryptor = cipher.decryptor()
-        decrypted_data = decryptor.update(ciphertext) + decryptor.finalize()
-        return decrypted_data.decode()
+        key = Encryptor.generate_key(password, note_id)
+        nonce = ciphertext[:12]
+        encrypted_data = ciphertext[12:]
+        aesgcm = AESGCM(key)
+        try:
+            decrypted_data = aesgcm.decrypt(nonce, encrypted_data, None)
+            return decrypted_data.decode()
+        except Exception as e:
+            raise DecryptionError('Invalid password or data corrupted') from e
