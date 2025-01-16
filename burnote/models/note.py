@@ -6,7 +6,7 @@ from flask import url_for
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .encryption import Encryptor
-from fastnote import db
+from burnote import db
 from settings import HASH_LENGTH, KEY_ALPHABET, KEY_LENGTH
 
 

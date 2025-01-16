@@ -1,7 +1,7 @@
 from flask import render_template
 
 from . import bp
-from fastnote import db
+from burnote import db
 
 
 @bp.errorhandler(404)
