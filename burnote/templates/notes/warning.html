@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Warning{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  {% include('layout/flash.html') %}
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h5 class="card-title text-warning">Attention Required</h5>
+          <p class="card-text text-muted">Please confirm your action by clicking the button below.</p>
+          
+          <form method="POST" class="d-inline">
+            <input type="hidden" name="form_type" value="burn_form">
+            {{ form.hidden_tag() }}
+            {{ form.submit(class_="btn btn-danger btn-lg") }}
+          </form>
+
+          <div class="mt-4">
+            <a href="{{ url_for('webapp.create') }}" class="btn btn-primary btn-lg">
+              <i class="bi bi-plus-circle"></i> Create Another Note
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

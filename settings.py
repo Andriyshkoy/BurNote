@@ -1,5 +1,13 @@
 import os
 
+from string import ascii_lowercase, digits
+
+
+HASH_LENGTH = 64
+
+KEY_ALPHABET = ascii_lowercase + digits
+KEY_LENGTH = 8
+
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY', 'you-will-never-guess')
