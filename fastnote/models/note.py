@@ -1,22 +1,23 @@
+import hashlib
 import random
 from datetime import datetime, timezone
 
 from flask import url_for
 from sqlalchemy.orm import Mapped, mapped_column
 
+from .encryption import Encryptor
 from fastnote import db
-from settings import HASH_LENGTH, HASH_ALPHABET
+from settings import HASH_LENGTH, KEY_ALPHABET, KEY_LENGTH
 
 
 class Note(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     hash: Mapped[str] = mapped_column(
-        db.String(HASH_LENGTH), nullable=False, unique=True,
-        default=lambda: Note.generate_hash())
+        db.String(HASH_LENGTH), nullable=False, unique=True)
     is_expired: Mapped[bool] = mapped_column(db.Boolean, nullable=False,
                                              default=False)
 
-    title: Mapped[str] = mapped_column(db.String(100), nullable=True)
+    title: Mapped[str] = mapped_column(db.String(256), nullable=True)
     text: Mapped[str] = mapped_column(db.Text, nullable=False)
     timestamp: Mapped[datetime] = mapped_column(
         nullable=False,
@@ -31,22 +32,25 @@ class Note(db.Model):
         return f'<Note {self.hash}>'
 
     @staticmethod
-    def generate_hash():
-        hash = ''.join(random.choices(HASH_ALPHABET, k=HASH_LENGTH))
+    def generate_key():
+        key = ''.join(random.choices(KEY_ALPHABET, k=KEY_LENGTH))
 
-        while Note.query.filter_by(hash=hash).first():
-            hash = ''.join(random.choices(HASH_ALPHABET, k=HASH_LENGTH))
+        while Note.get_by_key(key, silent=True):
+            key = ''.join(random.choices(KEY_ALPHABET, k=KEY_LENGTH))
 
-        return hash
+        return key
+
+    @staticmethod
+    def generate_hash(external_key: str) -> str:
+        return hashlib.sha256(external_key.encode()).hexdigest()
 
     @staticmethod
     def from_dict(data):
-        if 'expiration' in data:
-            if data['expiration']:
-                data['expiration'] = (datetime.now(timezone.utc) +
-                                      data['expiration'])
-            else:
-                data['expiration'] = None
+        if data.get('expiration'):
+            data['expiration'] = (datetime.now(timezone.utc) +
+                                  data['expiration'])
+        else:
+            data['expiration'] = None
 
         return Note(
             title=data['title'],
@@ -54,6 +58,22 @@ class Note(db.Model):
             expiration_date=data['expiration'],
             burn_after_reading=data['burn_after_reading']
         )
+
+    @staticmethod
+    def create(data):
+        note = Note.from_dict(data)
+        key = Note.generate_key()
+        note.hash = Note.generate_hash(key)
+        note.encrypt(key, data['password'])
+        return note, key
+
+    def encrypt(self, key, password):
+        self.text = Encryptor.encrypt_data(self.text, password, key)
+        self.title = Encryptor.encrypt_data(self.title, password, key)
+
+    def decrypt(self, key, password):
+        self.text = Encryptor.decrypt_data(self.text, password, key)
+        self.title = Encryptor.decrypt_data(self.title, password, key)
 
     def to_dict(self):
         return {
@@ -79,8 +99,8 @@ class Note(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def get_link(self):
-        return url_for('webapp.note', hash=self.hash, _external=True)
+    def get_link(self, key):
+        return url_for('webapp.note_view', key=key, _external=True)
 
     def expire(self):
         self.is_expired = True
@@ -88,5 +108,11 @@ class Note(db.Model):
         db.session.commit()
 
     @staticmethod
-    def get_by_hash(hash):
-        return Note.query.filter_by(hash=hash).first_or_404()
+    def get_by_hash(hash, silent=False):
+        q = Note.query.filter_by(hash=hash)
+        return q.first() if silent else q.first_or_404()
+
+    @staticmethod
+    def get_by_key(key, silent=False):
+        q = Note.query.filter_by(hash=Note.generate_hash(key))
+        return q.first() if silent else q.first_or_404()

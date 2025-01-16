@@ -3,11 +3,21 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
-  <div class="container mt-5">
-    <h1 class="text-center">About FastNote</h1>
-    <p class="lead text-center">FastNote is a simple note-taking web application.</p>
-    <p class="text-center">It allows you to create notes that will be deleted after reading.</p>
-    <p class="text-center">You can also set an expiration date for your notes.</p>
-    <p class="text-center">FastNote is built using Flask and SQLite.</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h1 class="text-center text-primary">About FastNote</h1>
+          <p class="lead text-center text-muted">BurNote is a simple and secure note-taking web application.</p>
+          <ul class="list-unstyled text-center mt-4">
+            <li><i class="bi bi-check-circle text-success"></i> Create notes that are deleted after reading.</li>
+            <li><i class="bi bi-clock text-warning"></i> Set expiration dates for your notes.</li>
+            <li><i class="bi bi-lightbulb text-info"></i> Built with Flask and SQLite for simplicity and efficiency.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 {% endblock %}

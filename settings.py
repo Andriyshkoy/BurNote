@@ -3,8 +3,10 @@ import os
 from string import ascii_lowercase, digits
 
 
-HASH_LENGTH = 8
-HASH_ALPHABET = ascii_lowercase + digits
+HASH_LENGTH = 64
+
+KEY_ALPHABET = ascii_lowercase + digits
+KEY_LENGTH = 8
 
 
 class Config(object):
