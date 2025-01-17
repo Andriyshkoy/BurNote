@@ -1,7 +1,6 @@
 from flask import Blueprint
-from flask_restful import Api
 
 bp = Blueprint('api', __name__, url_prefix='/api')
-api = Api(bp)
 
-from . import resources
+from .v1 import bp as v1_bp
+bp.register_blueprint(v1_bp)

@@ -43,7 +43,8 @@ class NoteAccessSchema(Schema):
             raise ValidationError({'key': 'Invalid key.'})
 
         if not note.is_available():
-            raise ValidationError({'note': 'Note has been expired and deleted'})
+            raise ValidationError({'note': 'Note has been expired and deleted'}
+                                  )
 
         try:
             note.decrypt(key, password)
