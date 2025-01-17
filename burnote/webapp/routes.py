@@ -11,8 +11,7 @@ def create():
     form = NoteForm()
 
     if form.validate_on_submit():
-        note, key = Note.create(form.data)
-        note.save()
+        note, key = Note.create(form.data, save=True)
         flash('Note created successfully', 'success')
         return render_template('notes/success.html', link=note.get_link(key))
 

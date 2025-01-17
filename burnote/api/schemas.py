@@ -18,8 +18,7 @@ class NoteSchema(Schema):
 
     @post_load
     def create_note(self, data, **kwargs):
-        note, key = Note.create(data)
-        note.save()
+        _, key = Note.create(data, save=True)
         data['key'] = key
         return data
 

@@ -55,11 +55,13 @@ class Note(db.Model):
         )
 
     @staticmethod
-    def create(data):
+    def create(data, save=False):
         note = Note.from_dict(data)
         key = Note.generate_key()
         note.hash = Note.generate_hash(key)
         note.encrypt(key, data.get('password', ''))
+        if save:
+            note.save()
         return note, key
 
     def encrypt(self, key, password):
@@ -71,6 +73,7 @@ class Note(db.Model):
         self.title = Encryptor.decrypt_data(self.title, password, key)
         if self.burn_after_reading:
             return self.expire()
+        return self
 
     def to_dict(self):
         return {
