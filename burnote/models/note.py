@@ -46,26 +46,31 @@ class Note(db.Model):
 
     @staticmethod
     def from_dict(data):
-        if data.get('expiration'):
-            data['expiration'] = (datetime.now(timezone.utc) +
-                                  data['expiration'])
-        else:
-            data['expiration'] = None
-
         return Note(
-            title=data['title'],
+            title=data.get('title', ''),
             text=data['text'],
-            expiration_date=data['expiration'],
-            burn_after_reading=data['burn_after_reading']
+            expiration_date=(datetime.now(timezone.utc) + data['expiration']
+                             if data['expiration'] else None),
+            burn_after_reading=data.get('burn_after_reading', False)
         )
 
     @staticmethod
-    def create(data):
+    def create(data, save=False):
         note = Note.from_dict(data)
         key = Note.generate_key()
         note.hash = Note.generate_hash(key)
-        note.encrypt(key, data['password'])
+        note.encrypt(key, data.get('password', ''))
+        if save:
+            note.save()
         return note, key
+
+    def copy(self):
+        return Note(
+            title=self.title,
+            text=self.text,
+            expiration_date=self.expiration_date,
+            burn_after_reading=self.burn_after_reading
+        )
 
     def encrypt(self, key, password):
         self.text = Encryptor.encrypt_data(self.text, password, key)
@@ -74,6 +79,9 @@ class Note(db.Model):
     def decrypt(self, key, password):
         self.text = Encryptor.decrypt_data(self.text, password, key)
         self.title = Encryptor.decrypt_data(self.title, password, key)
+        if self.burn_after_reading:
+            return self.expire()
+        return self
 
     def to_dict(self):
         return {
@@ -90,8 +98,10 @@ class Note(db.Model):
             return False
 
         if self.expiration_date:
-            return (datetime.now(timezone.utc) < self.expiration_date.replace(
-                tzinfo=timezone.utc))
+            if datetime.now(timezone.utc) > self.expiration_date.replace(
+                    tzinfo=timezone.utc):
+                self.expire()
+                return False
 
         return True
 
@@ -105,7 +115,7 @@ class Note(db.Model):
     def expire(self):
         self.is_expired = True
         self.expiration_date = datetime.now(timezone.utc)
-        copy = Note(title=self.title, text=self.text, timestamp=self.timestamp)
+        copy = self.copy()
         self.text = ''
         self.title = ''
         db.session.commit()
