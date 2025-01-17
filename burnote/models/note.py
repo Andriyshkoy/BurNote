@@ -46,17 +46,12 @@ class Note(db.Model):
 
     @staticmethod
     def from_dict(data):
-        if data.get('expiration'):
-            data['expiration'] = (datetime.now(timezone.utc) +
-                                  data['expiration'])
-        else:
-            data['expiration'] = None
-
         return Note(
-            title=data['title'],
+            title=data.get('title', ''),
             text=data['text'],
-            expiration_date=data['expiration'],
-            burn_after_reading=data['burn_after_reading']
+            expiration_date=(datetime.now(timezone.utc) + data['expiration']
+                             if data['expiration'] else None),
+            burn_after_reading=data.get('burn_after_reading', False)
         )
 
     @staticmethod
@@ -64,7 +59,7 @@ class Note(db.Model):
         note = Note.from_dict(data)
         key = Note.generate_key()
         note.hash = Note.generate_hash(key)
-        note.encrypt(key, data['password'])
+        note.encrypt(key, data.get('password', ''))
         return note, key
 
     def encrypt(self, key, password):
@@ -74,6 +69,8 @@ class Note(db.Model):
     def decrypt(self, key, password):
         self.text = Encryptor.decrypt_data(self.text, password, key)
         self.title = Encryptor.decrypt_data(self.title, password, key)
+        if self.burn_after_reading:
+            return self.expire()
 
     def to_dict(self):
         return {
