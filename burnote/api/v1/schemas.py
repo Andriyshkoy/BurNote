@@ -6,6 +6,9 @@ from burnote.models.errors import DecryptionError
 
 
 class NoteSchema(Schema):
+    """
+    Handles serialization and deserialization of Note data.
+    """
     title = fields.Str(required=False, load_default='')
     text = fields.Str(required=True)
     expiration = fields.TimeDelta(required=False, allow_none=True,
@@ -19,12 +22,22 @@ class NoteSchema(Schema):
 
     @post_load
     def create_note(self, data, **kwargs):
+        """
+        Create and save a new Note from the provided data.
+
+        :param data: Deserialized note data
+        :return: The same data with an added 'key' field
+        """
         _, key = Note.create(data, save=True)
         data['key'] = key
         return data
 
 
 class NoteAccessSchema(Schema):
+    """
+    Facilitates accessing and decrypting an existing Note
+    via provided key/password.
+    """
     key = fields.Str(required=True)
     password = fields.Str(required=False, load_default='')
     note = fields.Nested(NoteSchema, dump_only=True)
@@ -34,7 +47,14 @@ class NoteAccessSchema(Schema):
 
     @validates_schema
     def validate_schema(self, data, **kwargs):
-        """Комплексная проверка пароля и ключа."""
+        """
+        Validate the provided key and password,
+        ensuring the note is available and decryptable.
+
+        :param data: Deserialized schema data containing key/password
+        :raises ValidationError: If key is invalid, note is expired,
+                                 or decryption fails
+        """
         key = data.get('key')
         password = data.get('password', '')
 
@@ -55,10 +75,14 @@ class NoteAccessSchema(Schema):
 
     @post_load
     def add_note_to_output(self, data, **kwargs):
-        """Добавляем расшифрованный объект note в выходные данные."""
+        """
+        Add the decrypted note instance to the output if validation succeeds.
+
+        :param data: Schema data after validation
+        :return: Data updated with 'note' field
+        """
         if 'note' not in self.context:
             raise ValidationError({'note': 'Failed to decrypt note.'})
 
-        # Добавляем объект note в выходные данные
         data['note'] = self.context['note']
         return data
