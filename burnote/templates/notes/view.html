@@ -7,21 +7,37 @@
   {% include('layout/flash.html') %}
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <h1 class="card-title text-primary">{{ note.title if note.title else 'Untitled' }}</h1>
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white text-center py-3">
+          <h1 class="mb-0">{{ note.title if note.title else 'Untitled' }}</h1>
+        </div>
+        <div class="card-body py-4">
+          <p class="card-text fs-5" id="note-text">{{ note.text }}</p>
           <hr>
-          <p class="card-text">{{ note.text }}</p>
-          <div class="text-end">
-            <p class="card-text mb-0">
-              <small class="text-muted">
-                Created: {{ moment(note.timestamp).format('LLL') }}
-              </small>
-            </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <p class="mb-0">
+                <small class="text-muted">Created: {{ moment(note.timestamp).format('LLL') }}</small>
+              </p>
+            </div>
+            <button class="btn btn-secondary" onclick="copyToClipboard()">
+              <i class="bi bi-clipboard"></i> Copy to Clipboard
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+function copyToClipboard() {
+  const text = document.getElementById('note-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Note content copied to clipboard!');
+  }).catch(err => {
+    console.error('Failed to copy text: ', err);
+  });
+}
+</script>
 {% endblock %}

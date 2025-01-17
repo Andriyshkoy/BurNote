@@ -7,31 +7,33 @@
   {% include('layout/flash.html') %}
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <h1 class="text-center mb-4 text-primary">Create a Note</h1>
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white text-center py-4">
+          <h1 class="mb-0">Create a Note</h1>
+        </div>
+        <div class="card-body py-5">
           <form method="POST" action="" class="needs-validation" novalidate>
             {{ form.hidden_tag() }}
-            
-            <div class="mb-3">
-              <label for="title" class="form-label">Title (optional)</label>
+
+            <div class="mb-4">
+              <label for="title" class="form-label fw-bold">Title (optional)</label>
               {{ form.title(class_="form-control", id="title", placeholder="Enter title") }}
               {% for error in form.title.errors %}
                 <div class="invalid-feedback d-block">{{ error }}</div>
               {% endfor %}
             </div>
 
-            <div class="mb-3">
-              <label for="body" class="form-label">Body</label>
+            <div class="mb-4">
+              <label for="body" class="form-label fw-bold">Body</label>
               {{ form.text(class_="form-control", id="body", rows="5", placeholder="Enter note content") }}
               {% for error in form.text.errors %}
                 <div class="invalid-feedback d-block">{{ error }}</div>
               {% endfor %}
             </div>
 
-            <div class="row mb-3">
+            <div class="row mb-4">
               <div class="col-md-6">
-                <label for="expiration" class="form-label">Expiration</label>
+                <label for="expiration" class="form-label fw-bold">Expiration</label>
                 {{ form.expiration(class_="form-select", id="expiration") }}
                 {% for error in form.expiration.errors %}
                   <div class="invalid-feedback d-block">{{ error }}</div>
@@ -39,7 +41,7 @@
               </div>
 
               <div class="col-md-6">
-                <label for="password" class="form-label">Password (optional)</label>
+                <label for="password" class="form-label fw-bold">Password (optional)</label>
                 {{ form.password(class_="form-control", id="password", placeholder="Enter password") }}
                 {% for error in form.password.errors %}
                   <div class="invalid-feedback d-block">{{ error }}</div>
@@ -47,13 +49,13 @@
               </div>
             </div>
 
-            <div class="form-check mb-3">
+            <div class="form-check mb-4">
               {{ form.burn_after_reading(class_="form-check-input", id="burn_after_reading") }}
-              <label class="form-check-label" for="burn_after_reading">Burn after reading</label>
+              <label class="form-check-label fw-bold" for="burn_after_reading">Burn after reading</label>
             </div>
 
             <div class="text-center">
-              {{ form.submit(class_="btn btn-primary btn-lg") }}
+              {{ form.submit(class_="btn btn-primary btn-lg w-100") }}
             </div>
           </form>
         </div>
