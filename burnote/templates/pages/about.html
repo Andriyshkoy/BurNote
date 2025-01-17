@@ -5,16 +5,80 @@
 {% block content %}
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <h1 class="text-center text-primary">About FastNote</h1>
-          <p class="lead text-center text-muted">BurNote is a simple and secure note-taking web application.</p>
-          <ul class="list-unstyled text-center mt-4">
-            <li><i class="bi bi-check-circle text-success"></i> Create notes that are deleted after reading.</li>
-            <li><i class="bi bi-clock text-warning"></i> Set expiration dates for your notes.</li>
-            <li><i class="bi bi-lightbulb text-info"></i> Built with Flask and SQLite for simplicity and efficiency.</li>
-          </ul>
+    <div class="col-md-10">
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white text-center py-4">
+          <h1 class="mb-0">About BurnNote</h1>
+        </div>
+        <div class="card-body py-5">
+          <p class="lead text-center text-muted mb-5">
+            BurnNote is a simple and secure note-taking web application designed to make your notes ephemeral and safe.
+          </p>
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-check-circle text-success fs-3 me-3"></i>
+                <div>
+                  <h5>Create ephemeral notes</h5>
+                  <p class="text-muted">Your notes are deleted automatically after being read.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-clock text-warning fs-3 me-3"></i>
+                <div>
+                  <h5>Set expiration dates</h5>
+                  <p class="text-muted">Control how long your notes remain accessible.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-lightbulb text-info fs-3 me-3"></i>
+                <div>
+                  <h5>Built for simplicity</h5>
+                  <p class="text-muted">Developed with Flask and SQLite for efficiency and ease of use.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-shield-lock text-danger fs-3 me-3"></i>
+                <div>
+                  <h5>Secure encryption</h5>
+                  <p class="text-muted">Uses AES-GCM encryption to protect your notes.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-code-slash text-primary fs-3 me-3"></i>
+                <div>
+                  <h5>Python and SQLAlchemy</h5>
+                  <p class="text-muted">Developed with Python and the SQLAlchemy ORM.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-box-arrow-in-right text-success fs-3 me-3"></i>
+                <div>
+                  <h5>Marshmallow integration</h5>
+                  <p class="text-muted">Uses Marshmallow for data validation and serialization.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-globe text-secondary fs-3 me-3"></i>
+                <div>
+                  <h5>RESTful API</h5>
+                  <p class="text-muted">Provides an API for programmatic access to notes.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

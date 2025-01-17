@@ -11,4 +11,4 @@ KEY_LENGTH = 8
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY', 'you-will-never-guess')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///app.db')
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///app.db')
