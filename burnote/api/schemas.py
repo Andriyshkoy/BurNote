@@ -1,4 +1,5 @@
-from marshmallow import Schema, fields, ValidationError, validates_schema, post_load
+from marshmallow import (Schema, fields, ValidationError,
+                         validates_schema, post_load)
 
 from burnote.models import Note
 from burnote.models.errors import DecryptionError
