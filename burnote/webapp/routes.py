@@ -36,27 +36,25 @@ def note_view(key):
     form = NoteAccessForm()
     if form.validate_on_submit():
         try:
-            note.decrypt(key, form.password.data)
+            note = note.decrypt(key, form.password.data)
         except DecryptionError:
             flash('Invalid password', 'danger')
             return render_template('notes/password_protected.html', form=form)
 
         if note.burn_after_reading:
             flash('This note was only available once. It has been deleted. '
-                  'Make sure to remember the content.', 'danger')
-            note = note.expire()
+                  'Make sure to remember the content.', 'warning')
 
         return render_template('notes/view.html', note=note)
 
     # Handle GET request
     try:
-        note.decrypt(key, '')
+        note = note.decrypt(key, '')
     except DecryptionError:
         return render_template('notes/password_protected.html', form=form)
 
     if note.burn_after_reading:
         flash('This note was only available once. It has been deleted. '
               'Make sure to remember the content.', 'warning')
-        note = note.expire()
 
     return render_template('notes/view.html', note=note)
