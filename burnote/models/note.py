@@ -5,17 +5,21 @@ from datetime import datetime, timezone
 from flask import url_for
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .encryption import Encryptor
 from burnote import db
 from settings import HASH_LENGTH, KEY_ALPHABET, KEY_LENGTH
+
+from .encryption import Encryptor
 
 
 class Note(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     hash: Mapped[str] = mapped_column(
-        db.String(HASH_LENGTH), nullable=False, unique=True)
-    is_expired: Mapped[bool] = mapped_column(db.Boolean, nullable=False,
-                                             default=False)
+        db.String(HASH_LENGTH), nullable=False,
+        unique=True, index=True
+    )
+    is_expired: Mapped[bool] = mapped_column(
+        db.Boolean, nullable=False, default=False
+    )
 
     title: Mapped[str] = mapped_column(db.String(256), nullable=True)
     text: Mapped[str] = mapped_column(db.Text, nullable=False)
@@ -30,6 +34,16 @@ class Note(db.Model):
 
     def __repr__(self):
         return f'<Note {self.hash}>'
+
+    @staticmethod
+    def get_by_hash(hash, silent=False):
+        q = Note.query.filter_by(hash=hash)
+        return q.first() if silent else q.first_or_404()
+
+    @staticmethod
+    def get_by_key(key, silent=False):
+        q = Note.query.filter_by(hash=Note.generate_hash(key))
+        return q.first() if silent else q.first_or_404()
 
     @staticmethod
     def generate_key():
@@ -72,6 +86,10 @@ class Note(db.Model):
             burn_after_reading=self.burn_after_reading
         )
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
     def encrypt(self, key, password):
         self.text = Encryptor.encrypt_data(self.text, password, key)
         self.title = Encryptor.encrypt_data(self.title, password, key)
@@ -82,16 +100,6 @@ class Note(db.Model):
         if self.burn_after_reading:
             return self.expire()
         return self
-
-    def to_dict(self):
-        return {
-            'hash': self.hash,
-            'title': self.title,
-            'text': self.text,
-            'timestamp': self.timestamp,
-            'expiration_date': self.expiration_date,
-            'burn_after_reading': self.burn_after_reading
-        }
 
     def is_available(self):
         if self.is_expired:
@@ -105,10 +113,6 @@ class Note(db.Model):
 
         return True
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
     def get_link(self, key):
         return url_for('webapp.note_view', key=key, _external=True)
 
@@ -120,13 +124,3 @@ class Note(db.Model):
         self.title = ''
         db.session.commit()
         return copy
-
-    @staticmethod
-    def get_by_hash(hash, silent=False):
-        q = Note.query.filter_by(hash=hash)
-        return q.first() if silent else q.first_or_404()
-
-    @staticmethod
-    def get_by_key(key, silent=False):
-        q = Note.query.filter_by(hash=Note.generate_hash(key))
-        return q.first() if silent else q.first_or_404()

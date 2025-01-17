@@ -3,7 +3,7 @@ from flask_restful import Resource
 from marshmallow import ValidationError
 
 from . import api
-from .schemas import NoteSchema, NoteAccessSchema
+from .schemas import NoteAccessSchema, NoteSchema
 
 note_schema = NoteSchema()
 note_access_schema = NoteAccessSchema()
