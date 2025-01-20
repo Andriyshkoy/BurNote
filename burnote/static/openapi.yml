@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: BurnNote API
+  version: 1.0.0
+
+paths:
+  /v1/notes/create:
+    post:
+      summary: Create a new note
+      operationId: createNote
+      requestBody:
+        description: Note creation data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                title:
+                  type: string
+                  description: Optional title for the note
+                text:
+                  type: string
+                  description: Note text
+                expiration:
+                  type: integer
+                  description: Expiration time in minutes. By default note will never expire.
+                  default: NULL 
+                burn_after_reading:
+                  type: boolean
+                  description: Whether the note should be destroyed after reading
+                  default: false
+                password:
+                  type: string
+                  description: Optional password to encrypt the note
+      responses:
+        '201':
+          description: Successfully created a note
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: Unique key to access the note
+        '400':
+          description: Validation error
+
+  /v1/notes:
+    post:
+      summary: Retrieve and decrypt a note
+      operationId: viewNote
+      requestBody:
+        description: Note access data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+              properties:
+                key:
+                  type: string
+                  description: Unique key to access the note
+                password:
+                  type: string
+                  description: Optional password to decrypt the note. Required if the note is encrypted
+      responses:
+        '200':
+          description: Successfully retrieved the note
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  text:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time ISO 8601
+                    description: Creation date of the note
+
+                  expiration_date:
+                    type: string
+                    format: date-time ISO 8601
+                    description: Expiration date of the note
+                  burn_after_reading:
+                    type: boolean
+                    description: Whether the note will be destroyed after reading. If True, the note will be destroyed after the first access
+        '400':
+          description: Validation error
