@@ -4,7 +4,7 @@ info:
   version: 1.0.0
 
 paths:
-  /v1/notes/create:
+  api/v1/notes/create:
     post:
       summary: Create a new note
       operationId: createNote
@@ -49,7 +49,7 @@ paths:
         '400':
           description: Validation error
 
-  /v1/notes:
+  api/v1/notes:
     post:
       summary: Retrieve and decrypt a note
       operationId: viewNote
