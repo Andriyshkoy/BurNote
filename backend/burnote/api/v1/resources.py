@@ -10,7 +10,18 @@ note_access_schema = NoteAccessSchema()
 
 
 class NotesCreateResource(Resource):
+    """
+    API resource for creating new notes.
+    """
+
     def post(self):
+        """
+        Handle HTTP POST requests to create a new note.
+
+        :return:
+          - 201 Created with a JSON object containing the generated note key
+          - 400 Bad Request if validation fails
+        """
         try:
             data = note_schema.load(request.json)
         except ValidationError as err:
@@ -19,7 +30,18 @@ class NotesCreateResource(Resource):
 
 
 class NotesViewResource(Resource):
+    """
+    API resource for retrieving and decrypting existing notes.
+    """
+
     def post(self):
+        """
+        Handle HTTP POST requests to fetch and decrypt an existing note.
+
+        :return:
+          - 200 OK with a JSON object containing the decrypted note data
+          - 400 Bad Request if validation fails
+        """
         try:
             data = note_access_schema.load(request.json)
         except ValidationError as err:
