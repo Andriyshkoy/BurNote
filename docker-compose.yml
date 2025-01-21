@@ -1,0 +1,39 @@
+volumes:
+  db_data:
+  static_volume:
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: burnote_user
+      POSTGRES_PASSWORD: burnote_password
+      POSTGRES_DB: burnote
+
+  
+  backend:
+    depends_on:
+      - db
+    env_file:
+      - .env
+    build:
+      ./backend/
+    volumes:
+      - static_volume:/burnote/burnote/static
+
+    command:
+      gunicorn --bind 0.0.0.0:8000 manage:app
+
+  nginx:
+    depends_on:
+      - backend
+    build: 
+      ./nginx/
+    env_file:
+      - .env
+    ports:
+      - 11000:80
+    volumes:
+      - static_volume:/static

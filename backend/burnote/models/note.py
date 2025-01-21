@@ -2,11 +2,10 @@ import hashlib
 import random
 from datetime import datetime, timezone
 
-from flask import url_for
 from sqlalchemy.orm import Mapped, mapped_column
 
 from burnote import db
-from settings import HASH_LENGTH, KEY_ALPHABET, KEY_LENGTH
+from settings import DOMAIN, HASH_LENGTH, KEY_ALPHABET, KEY_LENGTH
 
 from .encryption import Encryptor
 
@@ -21,8 +20,9 @@ class Note(db.Model):
         db.Boolean, nullable=False, default=False
     )
 
-    title: Mapped[str] = mapped_column(db.String(256), nullable=True)
-    text: Mapped[str] = mapped_column(db.Text, nullable=False)
+    title: Mapped[bytes] = mapped_column(db.LargeBinary, nullable=True)
+    text: Mapped[bytes] = mapped_column(db.LargeBinary, nullable=False)
+
     timestamp: Mapped[datetime] = mapped_column(
         nullable=False,
         default=lambda: datetime.now(timezone.utc)
@@ -193,7 +193,7 @@ class Note(db.Model):
         :param key: Key to include in the note’s link
         :return: The generated URL as a string
         """
-        return url_for('webapp.note_view', key=key, _external=True)
+        return f'https://{DOMAIN}/{key}'
 
     def expire(self) -> 'Note':
         """
@@ -204,7 +204,7 @@ class Note(db.Model):
         self.is_expired = True
         self.expiration_date = datetime.now(timezone.utc)
         copy = self.copy()
-        self.text = ''
-        self.title = ''
+        self.text = b''
+        self.title = b''
         db.session.commit()
         return copy
