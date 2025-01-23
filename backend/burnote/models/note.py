@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Mapped, mapped_column
 
 from burnote import db
-from settings import DOMAIN, HASH_LENGTH, KEY_ALPHABET, KEY_LENGTH
+from settings import DOMAIN, HASH_LENGTH, KEY_ALPHABET, KEY_LENGTH, SCHEMA
 
 from .encryption import Encryptor
 
@@ -193,7 +193,7 @@ class Note(db.Model):
         :param key: Key to include in the note’s link
         :return: The generated URL as a string
         """
-        return f'https://{DOMAIN}/{key}'
+        return f'{SCHEMA}://{DOMAIN}/{key}'
 
     def expire(self) -> 'Note':
         """
