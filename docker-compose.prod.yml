@@ -16,7 +16,7 @@ services:
   backend:
     depends_on:
       - db
-    image: andriyshkoy/burnote-backend:lastest
+    image: andriyshkoy/burnote-backend:latest
     env_file:
       - .env
     volumes:
@@ -28,7 +28,7 @@ services:
   nginx:
     depends_on:
       - backend
-    image: andriyshkoy/burnote-nginx:lastest
+    image: andriyshkoy/burnote-nginx:latest
     env_file:
       - .env
     ports:

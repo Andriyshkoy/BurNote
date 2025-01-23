@@ -38,4 +38,4 @@ jobs:
 
             sleep 10
 
-            sudo docker compose -f docker-compose-prod.yml exec backend flask db upgrade
+            sudo docker compose -f docker-compose.prod.yml exec backend flask db upgrade
