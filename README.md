@@ -38,7 +38,6 @@ You can try the service at [burnote.andriyshkoy.ru](http://burnote.andriyshkoy.r
 - 📂 **backend/burnote/templates**: Template files for the web interface.  
 - 📂 **backend/burnote/static**: Static resources (CSS, JS, etc.).
 
-
 ## Installation & Setup
 
 ### Local Development
