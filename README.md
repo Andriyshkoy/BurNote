@@ -113,6 +113,13 @@ The application will be accessible at `http://localhost:5000`.
 BurnNote provides a RESTful API for programmatic access to its features.
 Refer to the OpenAPI specification located in [openapi.yml](backend/burnote/static/openapi.yml) for detailed information on available endpoints and their usage.
 
+## CI/CD
+
+This project includes GitHub Actions workflows for Continuous Integration (CI) and Continuous Deployment (CD).
+
+- **CI Workflow**: The [ci.yml](.github/workflows/ci.yml) workflow is triggered on pushes to the `dev` branch. It builds and pushes Docker images for the backend and nginx services to Docker Hub.
+- **CD Workflow**: The [deploy.yml](.github/workflows/deploy.yml) workflow is triggered on pushes to the `main` branch. It deploys the application to the server by copying the necessary files via SSH and executing remote commands to pull the latest Docker images and restart the services.
+
 ## Contributing
 
 Pull requests, bug reports, and feature suggestions are welcome. Open an issue or submit a PR to help improve BurnNote.  
