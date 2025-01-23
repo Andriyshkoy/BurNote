@@ -1,0 +1,41 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Copy files via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          source: docker-compose.prod.yml
+          target: dev/burnote
+      - name: Executing remote ssh commands to deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: >
+            cd dev/burnote
+
+            sudo docker compose -f docker-compose.prod.yml pull
+
+            sudo docker compose -f docker-compose.prod.yml down
+
+            sudo docker compose -f docker-compose.prod.yml up -d
+
+            sleep 10
+
+            sudo docker compose -f docker-compose-prod.yml exec backend flask db upgrade
