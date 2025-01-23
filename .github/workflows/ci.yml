@@ -2,12 +2,7 @@
 name: CI BurNote workflow
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  [push]
 
 jobs:
   build_backend_and_push_docker_image:
