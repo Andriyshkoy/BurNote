@@ -12,7 +12,9 @@
           <h1 class="mb-0">{{ note.title if note.title else 'Untitled' }}</h1>
         </div>
         <div class="card-body py-4">
-          <p class="card-text fs-5" id="note-text">{{ note.text }}</p>
+            <div class="p-3 bg-light border border-secondary">
+              <pre class="card-text fs-5" id="note-text">{{ note.text }}</pre>
+            </div>
           <hr>
           <div class="d-flex justify-content-between align-items-center">
             <div>
