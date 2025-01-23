@@ -25,7 +25,6 @@ jobs:
         uses: docker/build-push-action@v6.12.0
         with:
           context: ./backend/
-          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/burnote-backend:latest
   
@@ -49,6 +48,5 @@ jobs:
         uses: docker/build-push-action@v6.12.0
         with:
           context: ./nginx/
-          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/burnote-gateway:latest
