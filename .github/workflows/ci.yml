@@ -2,7 +2,9 @@
 name: CI BurNote workflow
 
 on:
-  [push]
+  push:
+    branches:
+      - dev
 
 jobs:
   build_backend_and_push_docker_image:
@@ -49,4 +51,4 @@ jobs:
         with:
           context: ./nginx/
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/burnote-gateway:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/burnote-nginx:latest
