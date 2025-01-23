@@ -2,12 +2,7 @@
 name: CI BurNote workflow
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  [push]
 
 jobs:
   build_backend_and_push_docker_image:
@@ -29,8 +24,7 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.12.0
         with:
-          context: .
-          file: backend/Dockerfile
+          context: ./backend/
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/burnote-backend:latest
   
@@ -53,7 +47,6 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.12.0
         with:
-          context: .
-          file: gateway/Dockerfile
+          context: ./nginx/
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/burnote-gateway:latest
