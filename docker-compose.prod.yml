@@ -4,14 +4,13 @@ volumes:
 
 services:
   db:
-    image: postgres:13
+    image: postgres:16
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: burnote_user
-      POSTGRES_PASSWORD: burnote_password
-      POSTGRES_DB: burnote
-
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
   
   backend:
     depends_on:
@@ -32,6 +31,6 @@ services:
     env_file:
       - .env
     ports:
-      - 11000:80
+      - 14082:80
     volumes:
       - static_volume:/static
